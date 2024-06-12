@@ -250,6 +250,14 @@ Glib::ustring getFileExtension(const Glib::ustring& filename)
             : Glib::ustring();
 }
 
+#ifdef LIBHEIF
+bool hasHeifExtension(const Glib::ustring& filename)
+{
+   const Glib::ustring extension = getFileExtension(filename);
+   return extension == "heic" || extension == "heif";
+}
+#endif
+
 bool hasJpegExtension(const Glib::ustring& filename)
 {
    const Glib::ustring extension = getFileExtension(filename);

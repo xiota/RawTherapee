@@ -25,6 +25,10 @@
 #include <utility>
 #include <vector>
 
+#ifdef LIBHEIF
+#include <libheif/heif.h>
+#endif
+
 #ifdef LIBJXL
 #include "jxl/decode_cxx.h"
 #include "jxl/resizable_parallel_runner_cxx.h"
@@ -828,6 +832,14 @@ int ImageIO::loadTIFF (const Glib::ustring &fname)
     return IMIO_SUCCESS;
 }
 
+#ifdef LIBHEIF
+// adapted from libheif example
+int ImageIO::loadHEIF(const Glib::ustring &fname)
+{
+    return IMIO_SUCCESS;
+}
+#endif
+
 #ifdef LIBJXL
 #define _PROFILE_ JXL_COLOR_PROFILE_TARGET_ORIGINAL
 // adapted from libjxl
@@ -1479,6 +1491,10 @@ int ImageIO::load (const Glib::ustring &fname)
 
     if (hasPngExtension(fname)) {
         return loadPNG (fname);
+#ifdef LIBHEIF
+    } else if (hasHeifExtension(fname)) {
+        return loadHEIF(fname);
+#endif
     } else if (hasJpegExtension(fname)) {
         return loadJPEG (fname);
 #ifdef LIBJXL

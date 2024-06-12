@@ -90,6 +90,10 @@ public:
     int load (const Glib::ustring &fname);
     int save (const Glib::ustring &fname) const;
 
+#ifdef LIBHEIF
+    int loadHEIF (const Glib::ustring &fname);
+#endif
+
 #ifdef LIBJXL
     int loadJXL (const Glib::ustring &fname);
 #endif

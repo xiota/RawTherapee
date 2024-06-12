@@ -96,6 +96,12 @@ void StdImageSource::getSampleFormat (const Glib::ustring &fname, IIOSampleForma
         sArrangement = IIOSA_CHUNKY;
         return;
 #endif
+#ifdef LIBHEIF
+    } else if (hasHeifExtension(fname)) {
+        sFormat = IIOSF_UNSIGNED_SHORT;
+        sArrangement = IIOSA_CHUNKY;
+        return;
+#endif
     } else if (hasTiffExtension(fname)) {
         int result = ImageIO::getTIFFSampleFormat (fname, sFormat, sArrangement);
 

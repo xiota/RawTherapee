@@ -56,6 +56,11 @@ bool hasTiffExtension(const Glib::ustring& filename);
 // Return true if file has .png extension (ignoring case)
 bool hasPngExtension(const Glib::ustring& filename);
 
+#ifdef LIBHEIF
+// Return true if file has .heic or .heif extension (ignoring case)
+bool hasHeifExtension(const Glib::ustring& filename);
+#endif
+
 #ifdef LIBJXL
 // Return true if file has .jxl extension (ignoring case)
 bool hasJxlExtension(const Glib::ustring& filename);
