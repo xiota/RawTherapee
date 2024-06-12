@@ -54,6 +54,7 @@ jobs:
             lensfun:p
             libiptcdata:p
             libjxl:p
+            libheif:p
             exiv2:p
 
       - name: Configure build

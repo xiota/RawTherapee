@@ -250,6 +250,9 @@ set(TCMALLOC_LIB_DIR
 set(WITH_JXL "AUTO" CACHE STRING "Build with JPEG XL support")
 set_property(CACHE WITH_JXL PROPERTY STRINGS AUTO ON OFF)
 
+set(WITH_HEIF "AUTO" CACHE STRING "Build with HEIF support")
+set_property(CACHE WITH_HEIF PROPERTY STRINGS AUTO ON OFF)
+
 # Set installation directories:
 if(WIN32 OR APPLE)
     if(BUILD_BUNDLE)
@@ -581,6 +584,27 @@ else()
     set(JXL_VERSION "Disabled")
 endif()
 
+if(WITH_HEIF AND NOT WITH_HEIF STREQUAL "AUTO")
+    set(HEIF_REQUIRED "REQUIRED")
+else()
+    set(HEIF_REQUIRED "")
+endif()
+pkg_check_modules(HEIF ${HEIF_REQUIRED} IMPORTED_TARGET libheif)
+if(HEIF_FOUND)
+    if(WITH_HEIF OR WITH_HEIF STREQUAL "AUTO")
+        add_definitions(-DLIBHEIF)
+    else()
+        message(STATUS "  HEIF support disabled by WITH_HEIF = ${WITH_HEIF}")
+        string(APPEND HEIF_VERSION " - Disabled")
+        set(HEIF_INCLUDE_DIRS "")
+        set(HEIF_LIBRARIES "")
+    endif()
+elseif(WITH_HEIF STREQUAL "AUTO")
+    set(HEIF_VERSION "Disabled, Auto")
+else()
+    set(HEIF_VERSION "Disabled")
+endif()
+
 # Check for libcanberra-gtk3 (sound events on Linux):
 if(UNIX AND (NOT APPLE))
     option(USE_LIBCANBERRA "Build with libcanberra" ON)
@@ -762,6 +786,7 @@ if(NOT APPLE)
         -DOPTION_OMP:STRING=${OPTION_OMP}
         -DWITH_MYFILE_MMAP:STRING=${WITH_MYFILE_MMAP}
         -DJXL_VERSION:STRING=${JXL_VERSION}
+        -DHEIF_VERSION:STRING=${HEIF_VERSION}
         -DLENSFUN_VERSION:STRING=${LENSFUN_VERSION})
 endif()
 
@@ -792,6 +817,7 @@ elseif(APPLE)
              -DOPTION_OMP:STRING=${OPTION_OMP}
              -DWITH_MYFILE_MMAP:STRING=${WITH_MYFILE_MMAP}
              -DJXL_VERSION:STRING=${JXL_VERSION}
+             -DHEIF_VERSION:STRING=${HEIF_VERSION}
              -DLENSFUN_VERSION:STRING=${LENSFUN_VERSION}
              -P ${PROJECT_SOURCE_DIR}/UpdateInfo.cmake)
 else()
